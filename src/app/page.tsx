@@ -1,310 +1,509 @@
 "use client";
 
 import { useEffect } from "react";
-import ShaderAnimation from "./components/ShaderAnimation";
-import ThreeJSAnimation from "./components/ThreeJSAnimation";
 
 export default function Home() {
- useEffect(() => {
- // Simple intersection observer for fade-in animations
- const observer = new IntersectionObserver(
- (entries) => {
- entries.forEach((entry) => {
- if (entry.isIntersecting) {
- entry.target.classList.add("visible");
- }
- });
- },
- { threshold: 0.1 }
- );
+  useEffect(() => {
+    // Scroll-reveal logic
+    const revealEls = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    revealEls.forEach((el) => io.observe(el));
 
- document.querySelectorAll(".fade-in-up").forEach((el) => {
- observer.observe(el);
- });
+    // Nav scroll-spy logic
+    const navLinks = document.querySelectorAll(".nav-links a");
+    const sections = Array.from(navLinks).map((a) =>
+      document.querySelector(a.getAttribute("href") || "")
+    );
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = "#" + entry.target.id;
+            navLinks.forEach((a) =>
+              a.classList.toggle("active", a.getAttribute("href") === id)
+            );
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    sections.forEach((s) => {
+      if (s) spy.observe(s);
+    });
 
- return () => observer.disconnect();
- }, []);
+    return () => {
+      io.disconnect();
+      spy.disconnect();
+    };
+  }, []);
 
- return (
- <>
- {/* Top Navigation */}
- <header className="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/30 shadow-sm transition-all duration-300 ease-in-out">
- <div className="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
- <a
- className="font-headline-lg text-headline-lg font-bold text-primary tracking-tight"
- href="#"
- >
- Kunal Garg
- </a>
- <nav className="hidden md:flex gap-gutter">
- <a
- className="text-on-surface-variant transition-colors hover:text-primary duration-200"
- href="#experience"
- >
- Experience
- </a>
- <a
- className="text-on-surface-variant transition-colors hover:text-primary duration-200"
- href="#projects"
- >
- Projects
- </a>
- <a
- className="text-on-surface-variant transition-colors hover:text-primary duration-200"
- href="#skills"
- >
- Skills
- </a>
- <a
- className="text-on-surface-variant transition-colors hover:text-primary duration-200"
- href="#certifications"
- >
- Certifications
- </a>
- <a
- className="text-on-surface-variant transition-colors hover:text-primary duration-200"
- href="#contact"
- >
- Contact
- </a>
- </nav>
- <a
- className="hidden md:inline-flex items-center justify-center px-6 py-2 bg-primary text-on-primary rounded hover:bg-primary/90 transition-colors duration-200"
- href="#contact"
- >
- Download Resume
- </a>
- </div>
- </header>
- 
- {/* Hero Section */}
- <section className="relative min-h-screen flex items-center pt-24 pb-section-gap overflow-hidden">
- 
- {/* Background Animations */}
- <div className="absolute inset-0 w-full h-full z-0 opacity-40 pointer-events-none">
- <ShaderAnimation />
- </div>
- <div className="absolute inset-0 w-full h-full z-0 opacity-30 pointer-events-none mix-blend-multiply">
- <ThreeJSAnimation />
- </div>
- <div className="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full text-center">
- <div className="fade-in-up inline-block mb-6 px-4 py-1.5 rounded-full border border-outline-variant/50 bg-surface-container-lowest/50 backdrop-blur-sm text-sm font-label-sm uppercase tracking-widest text-on-surface-variant">
- Gurugram, India
- </div>
- <h1
- className="font-display-lg text-display-lg text-primary mb-6 fade-in-up"
- style={{ transitionDelay: "0.1s" }}
- >
- Kunal Garg
- </h1>
- <h2
- className="font-headline-lg text-headline-lg md:text-[32px] text-secondary mb-8 font-light italic fade-in-up"
- style={{ transitionDelay: "0.2s" }}
- >
- Financial Analyst
- </h2>
- <div
- className="flex flex-wrap justify-center gap-4 fade-in-up"
- style={{ transitionDelay: "0.3s" }}
- >
- <a
- className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
- href="mailto:kunalgarg2231@gmail.com"
- >
- <span className="material-symbols-outlined text-lg">mail</span>
- kunalgarg2231@gmail.com
- </a>
- <a
- className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
- href="tel:9023805708"
- >
- <span className="material-symbols-outlined text-lg">call</span>
- 9023805708
- </a>
- <a
- className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
- href="https://linkedin.com/in/kunalgarg13"
- rel="noopener noreferrer"
- target="_blank"
- >
- <span className="material-symbols-outlined text-lg">link</span>
- linkedin.com/in/kunalgarg13
- </a>
- </div>
- </div>
- </section>
- 
- {/* Main Content Grid */}
- <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter pb-section-gap">
- {/* Sidebar (Desktop) */}
- <aside className="md:col-span-4 flex flex-col gap-12 fade-in-up">
- {/* Education */}
- <div className="glass-panel p-8 rounded-lg hover-lift">
- <h3 className="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2 border-b border-outline-variant/30 pb-4">
- <span className="material-symbols-outlined">school</span>
- Education
- </h3>
- <div className="space-y-6">
- <div>
- <div className="flex justify-between items-baseline mb-1">
- <h4 className="font-bold text-on-surface">Postgraduate Financial Analysis</h4>
- <span className="text-sm text-on-surface-variant">02/2026 – 07/2026</span>
- </div>
- <p className="text-on-surface-variant italic">Imarticus Learning, Delhi</p>
- </div>
- <div>
- <div className="flex justify-between items-baseline mb-1">
- <h4 className="font-bold text-on-surface">MBA</h4>
- <span className="text-sm text-on-surface-variant">2021 – 2023</span>
- </div>
- <p className="text-on-surface-variant italic">NMIMS, Mumbai</p>
- </div>
- <div>
- <div className="flex justify-between items-baseline mb-1">
- <h4 className="font-bold text-on-surface">Bachelor of Commerce</h4>
- <span className="text-sm text-on-surface-variant">2017 – 2020</span>
- </div>
- <p className="text-on-surface-variant italic">Punjab University, Chandigarh</p>
- </div>
- </div>
- </div>
- 
- {/* Skills & Certifications */}
- <div className="glass-panel p-8 rounded-lg hover-lift" id="skills">
- <h3 className="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2 border-b border-outline-variant/30 pb-4">
- <span className="material-symbols-outlined">psychology</span>
- Skills
- </h3>
- <div className="mb-6">
- <h4 className="font-bold text-on-surface mb-3 text-sm uppercase tracking-wider">Financial</h4>
- <div className="flex flex-wrap">
- <span className="skill-chip">Financial Statement Analysis</span>
- <span className="skill-chip">Financial Planning & Analysis</span>
- <span className="skill-chip">Financial Modeling</span>
- <span className="skill-chip">DCF Valuation</span>
- <span className="skill-chip">Equity Research</span>
- <span className="skill-chip">Risk Analysis</span>
- <span className="skill-chip">Capital Budgeting</span>
- </div>
- </div>
- <div className="mb-6">
- <h4 className="font-bold text-on-surface mb-3 text-sm uppercase tracking-wider">Technical</h4>
- <div className="flex flex-wrap">
- <span className="skill-chip">Advanced Excel</span>
- <span className="skill-chip">Power BI</span>
- <span className="skill-chip">SQL</span>
- </div>
- </div>
- <div className="mt-8 border-t border-outline-variant/30 pt-6" id="certifications">
- <h3 className="font-headline-md text-headline-md text-primary mb-4 flex items-center gap-2">
- <span className="material-symbols-outlined">workspace_premium</span>
- Certificates
- </h3>
- <ul className="space-y-3">
- <li className="list-dash text-sm">NISM - IV</li>
- <li className="list-dash text-sm">Investment Banking Course - JOBAAJ</li>
- <li className="list-dash text-sm">Investment Banking Certification - Udemy</li>
- <li className="list-dash text-sm">Analyze The Financial Statement & Company Reports - SKILL EDGE</li>
- </ul>
- </div>
- </div>
- </aside>
- 
- {/* Main Content Area */}
- <div className="md:col-span-8 flex flex-col gap-12">
- {/* Summary */}
- <section className="glass-panel p-8 rounded-lg hover-lift fade-in-up">
- <h3 className="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2 border-b border-outline-variant/30 pb-4">
- <span className="material-symbols-outlined">person</span>
- Professional Summary
- </h3>
- <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
- Results-driven Finance professional with an MBA and a Post Graduate Program in Financial Analysis. Skilled in Financial Modeling, Business Valuation, Financial Statement Analysis, Equity Research, Risk Analysis, and Data Analytics. Proficient in Advanced Microsoft Excel, Power BI, SQL, and PowerPoint with hands-on experience in building DCF valuation models, forecasting financial statements, and analyzing market trends. Strong analytical, problem-solving, and communication skills with a keen interest in Investment Banking, Corporate Finance, Equity Research, and Financial Planning & Analysis (FP&A). Passionate about leveraging financial insights to support strategic business decisions.
- </p>
- </section>
- 
- {/* Experience */}
- <section className="glass-panel p-8 rounded-lg hover-lift fade-in-up" id="experience">
- <h3 className="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2 border-b border-outline-variant/30 pb-4">
- <span className="material-symbols-outlined">work</span>
- Experience
- </h3>
- <div className="relative pl-6 border-l-2 border-outline-variant/30">
- <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-2"></div>
- <div className="flex justify-between items-baseline mb-2">
- <h4 className="font-bold text-lg text-primary">Financial Sales Intern - SHINE PROJECTS</h4>
- <span className="text-sm font-semibold text-secondary">09/2021 – 10/2021</span>
- </div>
- <ul className="space-y-2 mt-4">
- <li className="list-dash text-on-surface-variant">Completed training in Financial markets, Mutual funds, Insurance, and Banking products.</li>
- <li className="list-dash text-on-surface-variant">Acquired and onboarded 60+ clients through relationship management and consultative selling.</li>
- <li className="list-dash text-on-surface-variant">Assisted in managing customer investment portfolios and recommended suitable financial and banking products.</li>
- <li className="list-dash text-on-surface-variant">Generated leads through consultative selling and relationship management.</li>
- </ul>
- </div>
- </section>
- 
- {/* Projects */}
- <section className="glass-panel p-8 rounded-lg hover-lift fade-in-up" id="projects">
- <h3 className="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-2 border-b border-outline-variant/30 pb-4">
- <span className="material-symbols-outlined">architecture</span>
- Projects
- </h3>
- <div className="space-y-10">
- <div>
- <h4 className="font-bold text-lg text-primary mb-1">Equity Research Report & DCF Valuation - Colgate Palmolive India Ltd</h4>
- <p className="text-sm text-secondary italic mb-3">Conducted detailed financial statement analysis of 5 years to evaluate business performance.</p>
- <ul className="space-y-2">
- <li className="list-dash text-on-surface-variant">Built a Three Statement Discounted Cash Flow (DCF) valuation model to estimate intrinsic value.</li>
- <li className="list-dash text-on-surface-variant">Forecasted Free Cash Flow to Firm (FCFF) using historical financial data and business assumptions.</li>
- <li className="list-dash text-on-surface-variant">Performed sensitivity analysis to assess valuation under different growth and discount rate scenarios.</li>
- </ul>
- </div>
- <div>
- <h4 className="font-bold text-lg text-primary mb-1">Financial Modelling - Tata Motors Ltd</h4>
- <ul className="space-y-2 mt-3">
- <li className="list-dash text-on-surface-variant">Developed a comprehensive three-statement financial model.</li>
- <li className="list-dash text-on-surface-variant">Forecasted five years of FCFF based on operational and financial assumptions.</li>
- <li className="list-dash text-on-surface-variant">Calculated Weighted Average Cost of Capital (WACC) using comparable company beta analysis.</li>
- </ul>
- </div>
- </div>
- </section>
- </div>
- </main>
- 
- {/* Footer */}
- <footer
- className="w-full py-12 bg-surface-container-lowest border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-gutter max-w-container-max mx-auto"
- id="contact"
- >
- <div className="font-headline-md text-headline-md text-primary mb-4 md:mb-0">
- Kunal Garg
- </div>
- <div className="text-on-surface font-body-md text-body-md text-center md:text-left mb-4 md:mb-0">
- © 2024 Kunal Garg. Financial Analyst Portfolio.
- </div>
- <div className="flex gap-6">
- <a
- className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
- href="https://linkedin.com/in/kunalgarg13"
- >
- LinkedIn
- </a>
- <a
- className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
- href="mailto:kunalgarg2231@gmail.com"
- >
- Email
- </a>
- <a
- className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
- href="#"
- >
- Privacy Policy
- </a>
- </div>
- </footer>
- </>
- );
+  return (
+    <>
+      <header className="site-nav">
+        <div className="nav-inner">
+          <div className="nav-mark">
+            KUNAL GARG <span>·</span> <span>FINANCIAL ANALYST</span>
+          </div>
+          <nav className="nav-links">
+            <a href="#summary" className="cell-hover">
+              Summary
+            </a>
+            <a href="#experience" className="cell-hover">
+              Experience
+            </a>
+            <a href="#projects" className="cell-hover">
+              Projects
+            </a>
+            <a href="#skills" className="cell-hover">
+              Skills
+            </a>
+            <a href="#education" className="cell-hover">
+              Education
+            </a>
+            <a href="#certificates" className="cell-hover">
+              Certificates
+            </a>
+            <a href="#contact" className="cell-hover">
+              Contact
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <div className="ticker-wrap" aria-hidden="true">
+        <div className="ticker-track">
+          <span className="up">▲ DCF VALUATION</span>
+          <span>EQUITY RESEARCH</span>
+          <span className="up">▲ FINANCIAL MODELING</span>
+          <span>RISK ANALYSIS</span>
+          <span className="up">▲ FP&amp;A</span>
+          <span>WACC</span>
+          <span className="up">▲ FCFF FORECASTING</span>
+          <span>M&amp;A</span>
+          <span>LBO ANALYSIS</span>
+          <span className="up">▲ POWER BI</span>
+          <span>SQL</span>
+          <span className="up">▲ ADVANCED EXCEL</span>
+          <span>CAPITAL MARKETS</span>
+          <span className="up">▲ DCF VALUATION</span>
+          <span>EQUITY RESEARCH</span>
+          <span className="up">▲ FINANCIAL MODELING</span>
+          <span>RISK ANALYSIS</span>
+          <span className="up">▲ FP&amp;A</span>
+          <span>WACC</span>
+          <span className="up">▲ FCFF FORECASTING</span>
+          <span>M&amp;A</span>
+          <span>LBO ANALYSIS</span>
+          <span className="up">▲ POWER BI</span>
+          <span>SQL</span>
+          <span className="up">▲ ADVANCED EXCEL</span>
+          <span>CAPITAL MARKETS</span>
+        </div>
+      </div>
+
+      <section className="hero" id="home">
+        <svg
+          className="hero-chart"
+          viewBox="0 0 1000 340"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="chartFade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2FA878" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#2FA878" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            className="fill"
+            d="M0,300 L60,280 L140,290 L220,240 L300,255 L380,190 L460,205 L540,150 L620,170 L700,110 L780,125 L860,70 L940,85 L1000,40 L1000,340 L0,340 Z"
+          />
+          <path
+            className="line"
+            d="M0,300 L60,280 L140,290 L220,240 L300,255 L380,190 L460,205 L540,150 L620,170 L700,110 L780,125 L860,70 L940,85 L1000,40"
+          />
+        </svg>
+
+        <div className="hero-content">
+          <div className="hero-kicker">
+            <span className="sym">KGARG</span> · GURUGRAM, IN · FINANCE
+          </div>
+          <h1 className="hero-name">
+            Kunal<br />
+            Garg
+          </h1>
+          <div className="hero-role">Financial Analyst — Valuation &amp; FP&amp;A</div>
+          <p className="hero-desc">
+            MBA with a Post Graduate Program in Financial Analysis. Builds DCF
+            valuation models, forecasts financial statements, and reads market
+            trends for a living — with an eye on investment banking, equity
+            research, and corporate finance.
+          </p>
+          {/* Note: The stat-row containing the "60+ Clients Onboarded" etc. was removed as requested. */}
+        </div>
+      </section>
+
+      <section id="summary">
+        <div className="eyebrow reveal">Analyst Note</div>
+        <h2 className="section-title reveal">Professional Summary</h2>
+        <div className="summary-panel reveal">
+          <span className="drop">R</span>esults-driven finance professional with
+          an MBA and a Post Graduate Program in Financial Analysis. Skilled in
+          financial modeling, business valuation, financial statement analysis,
+          equity research, risk analysis, and data analytics — proficient in
+          advanced Excel, Power BI, SQL, and PowerPoint, with hands-on
+          experience building DCF valuation models, forecasting financial
+          statements, and analyzing market trends. Strong analytical,
+          problem-solving, and communication skills, with a keen interest in
+          investment banking, corporate finance, equity research, and FP&amp;A.
+          Passionate about turning financial insight into strategic business
+          decisions.
+        </div>
+      </section>
+
+      <section id="experience">
+        <div className="eyebrow reveal">Track Record</div>
+        <h2 className="section-title reveal">Experience</h2>
+
+        <div className="exp-row reveal">
+          <div className="exp-date">
+            09/2021 – 10/2021<br />
+            Remote / Field
+          </div>
+          <div>
+            <div className="exp-title">
+              <span className="tick">▲</span> Financial Sales Intern
+            </div>
+            <div className="exp-org">Shine Projects</div>
+            <ul>
+              <li>
+                Completed training in financial markets, mutual funds, insurance,
+                and banking products.
+              </li>
+              <li>
+                Acquired and onboarded 60+ clients through relationship
+                management and consultative selling.
+              </li>
+              <li>
+                Assisted in managing customer investment portfolios and
+                recommended suitable financial and banking products.
+              </li>
+              <li>
+                Generated leads through consultative selling and relationship
+                management.
+              </li>
+              <li>
+                Collaborated with team members to achieve monthly sales targets.
+              </li>
+              <li>
+                Sharpened communication, presentation, negotiation, and client
+                relationship management skills.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <div className="eyebrow reveal">Independent Research</div>
+        <h2 className="section-title reveal">Projects</h2>
+
+        <div className="proj-grid reveal">
+          <div className="proj-card cell-hover">
+            <div className="proj-ticker">
+              <span>CLGT·IN</span>
+              <span className="chg">EQUITY RESEARCH</span>
+            </div>
+            <div className="proj-name">
+              Equity Research Report &amp; DCF Valuation — Colgate Palmolive
+              India Ltd
+            </div>
+            <ul>
+              <li>
+                Conducted 5-year financial statement analysis to evaluate
+                business performance.
+              </li>
+              <li>
+                Built a three-statement DCF valuation model to estimate intrinsic
+                value.
+              </li>
+              <li>
+                Forecasted Free Cash Flow to Firm (FCFF) using historical data
+                and business assumptions.
+              </li>
+              <li>
+                Ran sensitivity analysis across growth and discount-rate
+                scenarios.
+              </li>
+            </ul>
+            <div className="tag-row">
+              <span className="tag">DCF</span>
+              <span className="tag">FCFF</span>
+              <span className="tag">Sensitivity Analysis</span>
+            </div>
+          </div>
+
+          <div className="proj-card cell-hover">
+            <div className="proj-ticker">
+              <span>TATAMTR·IN</span>
+              <span className="chg">MODELING</span>
+            </div>
+            <div className="proj-name">
+              Financial Modelling — Tata Motors Ltd
+            </div>
+            <ul>
+              <li>Developed a comprehensive three-statement financial model.</li>
+              <li>
+                Forecasted 5 years of FCFF from operational and financial
+                assumptions.
+              </li>
+              <li>Calculated WACC using comparable-company beta analysis.</li>
+              <li>
+                Estimated intrinsic share value and evaluated the investment
+                opportunity.
+              </li>
+            </ul>
+            <div className="tag-row">
+              <span className="tag">3-Statement Model</span>
+              <span className="tag">WACC</span>
+              <span className="tag">Valuation</span>
+            </div>
+          </div>
+
+          <div className="proj-card cell-hover">
+            <div className="proj-ticker">
+              <span>AUTO10·β</span>
+              <span className="chg">RISK</span>
+            </div>
+            <div className="proj-name">
+              Risk Analysis Using Beta — Auto Sector
+            </div>
+            <ul>
+              <li>
+                Calculated beta values for ten large-cap automobile companies.
+              </li>
+              <li>
+                Benchmarked company betas against the Nifty Auto Index and Nifty
+                50.
+              </li>
+              <li>
+                Analyzed systematic risk to support investment decision-making.
+              </li>
+            </ul>
+            <div className="tag-row">
+              <span className="tag">Beta</span>
+              <span className="tag">Systematic Risk</span>
+              <span className="tag">Nifty Auto</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <div className="eyebrow reveal">Toolkit</div>
+        <h2 className="section-title reveal">Skills</h2>
+
+        <div className="reveal">
+          <div className="skills-group">
+            <h3>Financial Skills</h3>
+            <div className="skill-cells">
+              <div className="skill-cell cell-hover">
+                Financial Statement Analysis
+              </div>
+              <div className="skill-cell cell-hover">FP&amp;A</div>
+              <div className="skill-cell cell-hover">Financial Modeling</div>
+              <div className="skill-cell cell-hover">DCF Valuation</div>
+              <div className="skill-cell cell-hover">Equity Research</div>
+              <div className="skill-cell cell-hover">
+                Financial Forecasting
+              </div>
+              <div className="skill-cell cell-hover">
+                Financial Ratio Analysis
+              </div>
+              <div className="skill-cell cell-hover">Risk Analysis</div>
+              <div className="skill-cell cell-hover">
+                Market Research &amp; Data Analysis
+              </div>
+              <div className="skill-cell cell-hover">Dashboard Reporting</div>
+              <div className="skill-cell cell-hover">
+                Budgeting &amp; Forecasting
+              </div>
+              <div className="skill-cell cell-hover">Capital Budgeting</div>
+              <div className="skill-cell cell-hover">Variance Analysis</div>
+              <div className="skill-cell cell-hover">Financial Reporting</div>
+              <div className="skill-cell cell-hover">KPI Analysis</div>
+              <div className="skill-cell cell-hover">Cost Analysis</div>
+              <div className="skill-cell cell-hover">Due Diligence</div>
+              <div className="skill-cell cell-hover">LBO Analysis</div>
+              <div className="skill-cell cell-hover">M&amp;A</div>
+              <div className="skill-cell cell-hover">Capital Markets</div>
+            </div>
+          </div>
+
+          <div className="skills-group">
+            <h3>Technical Skills</h3>
+            <div className="skill-cells">
+              <div className="skill-cell cell-hover">Advanced Excel</div>
+              <div className="skill-cell cell-hover">Power BI</div>
+              <div className="skill-cell cell-hover">SQL</div>
+              <div className="skill-cell cell-hover">Microsoft PowerPoint</div>
+              <div className="skill-cell cell-hover">Microsoft Word</div>
+            </div>
+          </div>
+
+          <div className="skills-group">
+            <h3>Communication</h3>
+            <div className="skill-cells">
+              <div className="skill-cell cell-hover">English</div>
+              <div className="skill-cell cell-hover">Hindi</div>
+              <div className="skill-cell cell-hover">Punjabi</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="education">
+        <div className="eyebrow reveal">Academic Record</div>
+        <h2 className="section-title reveal">Education</h2>
+
+        <div className="reveal">
+          <div className="edu-row">
+            <div>
+              <div className="edu-deg">
+                Postgraduate Financial Analysis Program
+              </div>
+              <div className="edu-org">Imarticus Learning</div>
+              <div className="edu-loc">Delhi</div>
+            </div>
+            <div className="edu-date">02/2026 – 07/2026</div>
+          </div>
+          <div className="edu-row">
+            <div>
+              <div className="edu-deg">Masters in Business Administration</div>
+              <div className="edu-org">NMIMS</div>
+              <div className="edu-loc">Mumbai</div>
+            </div>
+            <div className="edu-date">2021 – 2023</div>
+          </div>
+          <div className="edu-row">
+            <div>
+              <div className="edu-deg">Bachelor of Commerce</div>
+              <div className="edu-org">Punjab University</div>
+              <div className="edu-loc">Chandigarh</div>
+            </div>
+            <div className="edu-date">2017 – 2020</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="certificates">
+        <div className="eyebrow reveal">Credentials</div>
+        <h2 className="section-title reveal">Certificates</h2>
+
+        <div className="cert-grid reveal">
+          <div className="cert-card">
+            <div className="cert-name">NISM – IV</div>
+            <div className="cert-issuer">NISM</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">Investment Banking Course</div>
+            <div className="cert-issuer">Jobaaj</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">Investment Banking Certification</div>
+            <div className="cert-issuer">Udemy</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">
+              Analyze the Financial Statement &amp; Company Reports
+            </div>
+            <div className="cert-issuer">Skill Edge</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">
+              Reality of Capital Markets and Business Valuation
+            </div>
+            <div className="cert-issuer">Skill Edge</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">
+              Financial Markets and Training in Share Market, Insurance, Mutual
+              Funds, Banking Concepts
+            </div>
+            <div className="cert-issuer">Shine Projects</div>
+          </div>
+          <div className="cert-card">
+            <div className="cert-name">
+              Advanced Stock Market and Derivative Training
+            </div>
+            <div className="cert-issuer">Shine Projects</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div className="eyebrow reveal">Get In Touch</div>
+        <h2 className="section-title reveal">Contact</h2>
+
+        <div className="contact-panel reveal">
+          <div className="meta-grid">
+            <div className="meta-item">
+              <div className="meta-key">Phone</div>
+              <a
+                className="meta-val cell-hover"
+                href="tel:+919023805708"
+                style={{ display: "inline-block" }}
+              >
+                +91 90238 05708
+              </a>
+            </div>
+            <div className="meta-item">
+              <div className="meta-key">Email</div>
+              <a
+                className="meta-val cell-hover"
+                href="mailto:kunalgarg2231@gmail.com"
+                style={{ display: "inline-block" }}
+              >
+                kunalgarg2231@gmail.com
+              </a>
+            </div>
+            <div className="meta-item">
+              <div className="meta-key">LinkedIn</div>
+              <a
+                className="meta-val cell-hover"
+                href="https://linkedin.com/in/kunalgarg13"
+                target="_blank"
+                rel="noopener"
+                style={{ display: "inline-block" }}
+              >
+                linkedin.com/in/kunalgarg13
+              </a>
+            </div>
+            <div className="meta-item">
+              <div className="meta-key">Location</div>
+              <div className="meta-val">Gurugram, India</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div className="footer-mark">KUNAL GARG © 2026</div>
+        <div className="disclaimer">
+          This profile is prepared for informational purposes only and does not
+          constitute an offer, recommendation, or solicitation of any kind.
+        </div>
+      </footer>
+    </>
+  );
 }
