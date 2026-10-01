@@ -1,48 +1,41 @@
+import SectionHeader from "./SectionHeader";
+
+const certificates = [
+  { name: "NISM-IV", issuer: "NISM" },
+  { name: "Investment Banking Course", issuer: "Jobaaj" },
+  { name: "Investment Banking Certification", issuer: "Udemy" },
+  { name: "Analyze the Financial Statement & Company Reports", issuer: "Skill Edge" },
+  { name: "Reality of Capital Markets and Business Valuation", issuer: "Skill Edge" },
+  {
+    name: "Financial Markets and Training in Share Market, Insurance, Mutual Funds, Banking Concepts",
+    issuer: "Shine Projects",
+  },
+  { name: "Advanced Stock Market and Derivative Training", issuer: "Shine Projects" },
+];
+
 export default function Certificates() {
   return (
     <section id="certificates">
-      <div className="eyebrow reveal">Credentials</div>
-      <h2 className="section-title reveal">Certificates</h2>
+      <SectionHeader index="06" eyebrow="Credentials" title="Certificates" />
 
-      <div className="cert-grid reveal">
-        <div className="cert-card">
-          <div className="cert-name">NISM – IV</div>
-          <div className="cert-issuer">NISM</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">Investment Banking Course</div>
-          <div className="cert-issuer">Jobaaj</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">Investment Banking Certification</div>
-          <div className="cert-issuer">Udemy</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">
-            Analyze the Financial Statement &amp; Company Reports
-          </div>
-          <div className="cert-issuer">Skill Edge</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">
-            Reality of Capital Markets and Business Valuation
-          </div>
-          <div className="cert-issuer">Skill Edge</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">
-            Financial Markets and Training in Share Market, Insurance, Mutual
-            Funds, Banking Concepts
-          </div>
-          <div className="cert-issuer">Shine Projects</div>
-        </div>
-        <div className="cert-card">
-          <div className="cert-name">
-            Advanced Stock Market and Derivative Training
-          </div>
-          <div className="cert-issuer">Shine Projects</div>
-        </div>
-      </div>
+      <ul className="cert-grid reveal">
+        {certificates.map((c, i) => (
+          <li className="cert-card" key={c.name}>
+            <div className="cert-top">
+              <span className="cert-check" aria-hidden="true">✓</span>
+              <span className="cert-idx">{String(i + 1).padStart(2, "0")}</span>
+            </div>
+            <div className="cert-name">{c.name}</div>
+            <div className="cert-issuer">{c.issuer}</div>
+          </li>
+        ))}
+        <li className="cert-summary" aria-hidden="true">
+          <span className="cert-summary-num">{certificates.length}</span>
+          <span className="cert-summary-text">
+            Finance credentials across markets, investment banking, and valuation.
+          </span>
+        </li>
+      </ul>
     </section>
   );
 }

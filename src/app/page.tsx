@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
-import Ticker from "./components/Ticker";
 import Hero from "./components/Hero";
 import Summary from "./components/Summary";
 import Experience from "./components/Experience";
+import Approach from "./components/Approach";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Education from "./components/Education";
@@ -29,11 +29,12 @@ export default function Home() {
     );
     revealEls.forEach((el) => io.observe(el));
 
-    // Nav scroll-spy logic
-    const navLinks = document.querySelectorAll(".nav-links a");
-    const sections = Array.from(navLinks).map((a) =>
-      document.querySelector(a.getAttribute("href") || "")
+    // Nav scroll-spy logic (desktop links and mobile menu links)
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>(
+      ".nav-link, .mobile-link"
     );
+    const ids = Array.from(new Set(Array.from(navLinks).map((a) => a.getAttribute("href") || "")));
+    const sections = ids.map((id) => document.querySelector(id));
     const spy = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -59,16 +60,21 @@ export default function Home() {
 
   return (
     <>
+      <a className="skip-link" href="#summary">
+        Skip to content
+      </a>
       <Navbar />
-      <Ticker />
-      <Hero />
-      <Summary />
-      <Experience />
-      <Projects />
-      <Skills />
-      <Education />
-      <Certificates />
-      <Contact />
+      <main>
+        <Hero />
+        <Summary />
+        <Experience />
+        <Approach />
+        <Projects />
+        <Skills />
+        <Education />
+        <Certificates />
+        <Contact />
+      </main>
     </>
   );
 }

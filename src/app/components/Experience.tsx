@@ -1,20 +1,26 @@
+import SectionHeader from "./SectionHeader";
+
 export default function Experience() {
   return (
     <section id="experience">
-      <div className="eyebrow reveal">Track Record</div>
-      <h2 className="section-title reveal">Experience</h2>
+      <SectionHeader index="02" eyebrow="Track Record" title="Experience" />
 
-      <div className="exp-row reveal">
-        <div className="exp-date">
-          09/2021 – 10/2021<br />
-          Remote / Field
-        </div>
-        <div>
-          <div className="exp-title">
-            <span className="tick">▲</span> Financial Sales Intern
+      <article className="exp-card reveal">
+        <div className="exp-meta">
+          <div className="exp-date">Sep 2021 to Oct 2021</div>
+          <div className="exp-loc">Remote / Field</div>
+          <div className="exp-kpi">
+            <span className="exp-kpi-num">60+</span>
+            <span className="exp-kpi-label">Clients onboarded</span>
           </div>
+        </div>
+
+        <div>
+          <h3 className="exp-title">
+            <span className="tick" aria-hidden="true">▲</span> Financial Sales Intern
+          </h3>
           <div className="exp-org">Shine Projects</div>
-          <ul>
+          <ul className="bullets">
             <li>
               Completed training in financial markets, mutual funds, insurance,
               and banking products.
@@ -40,7 +46,7 @@ export default function Experience() {
             </li>
           </ul>
         </div>
-      </div>
+      </article>
     </section>
   );
 }
